@@ -164,6 +164,39 @@ dl.terms div{background:var(--surface);border:1px solid var(--line);border-radiu
 dl.terms dt{font-weight:700}
 dl.terms dd{margin:4px 0 0;color:var(--ink-2);font-size:15px}
 footer{padding:32px 0 48px;color:var(--muted);font-size:14px;border-top:1px solid var(--line)}
+
+/* charts + extras */
+.toggle{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:12px;flex-wrap:wrap}
+.toggle button{font:inherit;font-size:14px;font-weight:600;border:0;background:var(--surface);color:var(--ink-2);padding:8px 14px;cursor:pointer}
+.toggle button.on{background:var(--accent);color:#fff}
+.chart-wrap{width:100%;height:auto;display:block}
+.src{font-size:12px;color:var(--muted);margin-top:8px}
+.flag{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line);font-size:15px}
+.flag:last-child{border-bottom:0}
+.flag .ic{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;color:#fff}
+.flag.ok .ic{background:var(--good)} .flag.no .ic{background:var(--bad)} .flag.mid .ic{background:var(--warn)}
+.subj-in{width:100%;font:inherit;font-size:17px;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.meter{height:10px;border-radius:5px;background:var(--surface-2);overflow:hidden;margin:12px 0 4px}
+.meter i{display:block;height:100%;border-radius:5px;transition:width .3s,background .3s}
+table.clean td,table.clean th{padding:10px 12px}
+.kr{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.kr button{font:inherit;font-size:13px;font-weight:600;border:0;background:var(--surface);color:var(--ink-2);padding:6px 10px;cursor:pointer}
+.kr button.on.k{background:var(--good);color:#fff} .kr button.on.r{background:var(--bad);color:#fff}
+tr.res-ok td{background:var(--good-soft)} tr.res-no td{background:var(--bad-soft)}
+.res-why{display:block;font-size:13px;color:var(--ink-2);margin-top:4px}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.mini-mail{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface);font-size:13px}
+.mini-mail .hd{background:var(--surface-2);padding:8px 12px;font-weight:700;border-bottom:1px solid var(--line)}
+.mini-mail .bd{padding:12px;display:grid;gap:8px}
+.blk{border-radius:8px;padding:10px;color:#fff;font-weight:700;background:linear-gradient(160deg,#2a5fb0,#57b6e8)}
+.blk.sm{background:var(--surface-2);color:var(--ink-2);font-weight:600;padding:8px}
+.blk-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+input[type=range]{accent-color:var(--accent)}
+.range-row{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:12px 0}
+.range-row input{flex:1;min-width:180px}
+.range-val{font-weight:800;font-size:22px;color:var(--brand);min-width:64px}
+@media (max-width:640px){.cmp{grid-template-columns:1fr}
+  #cleanTbl thead{display:none} #cleanTbl tr{display:block;padding:10px 12px;border-bottom:1px solid var(--line)} #cleanTbl td{display:block;border:0;padding:2px 0} #cleanTbl td:last-child{padding-top:8px}}
 @media (max-width:640px){
   .hero{padding:40px 16px 24px}
   section{padding:36px 0}
@@ -217,6 +250,13 @@ footer{padding:32px 0 48px;color:var(--muted);font-size:14px;border-top:1px soli
     <div class="card"><span class="pill">Return</span><div class="big-stat">Top ROI</div><p class="note">Marketers consistently rate email as their highest-return channel.</p></div>
   </div>
   <p style="margin:20px 0 0;color:var(--ink-2);max-width:720px">Why is the return so high? Once someone gives you their address, each extra email costs almost nothing. With display or search ads, you pay again for every impression or click. Plenty of emails never get opened, but a small share of a huge number is still a lot of people. (One store email to 10 million customers counts as 10 million of those daily emails.)</p>
+  <div class="card" style="margin-top:20px">
+    <div class="toggle" id="whyTabs"><button class="on" data-c="vol">Daily email volume</button><button data-c="pref">How people want to hear from brands</button><button data-c="roi">ROI ratings</button></div>
+    <div id="whyChart"></div>
+    <div class="legend" id="whyLegend"></div>
+    <p class="note" id="whyNote" style="margin-top:10px"></p>
+    <div class="src" id="whySrc"></div>
+  </div>
   <div class="key">Rent attention everywhere else; own it here. That's why companies guard their email lists so closely.</div>
 </div></section>
 
@@ -249,6 +289,38 @@ footer{padding:32px 0 48px;color:var(--muted);font-size:14px;border-top:1px soli
   <div class="update"><b>Updated rules (2024):</b> Gmail and Yahoo now require anyone sending about 5,000+ emails a day to prove who they are with email authentication (SPF, DKIM and DMARC), offer a <b>one-click unsubscribe</b> and honor it within two days, and keep spam complaints below <b>0.3%</b>. Microsoft added similar rules for Outlook in 2025.</div>
   <div class="update"><b>The law:</b> in the U.S., CAN-SPAM requires a working unsubscribe link, your physical mailing address and honest subject lines. The EU (GDPR) and Canada (CASL) go further and require permission before you send.</div>
 
+  <div class="card" style="margin-top:20px">
+    <h3>The path to the inbox</h3>
+    <p class="note" style="margin-bottom:10px">Every marketing email passes three checks before anyone sees it. Fail one and it lands in spam, or never arrives.</p>
+    <svg viewBox="0 0 760 250" class="chart-wrap" role="img" aria-label="An email passes authentication, reputation and content checks before reaching the inbox; failing any check sends it to the spam folder">
+      <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" fill="var(--muted)"/></marker></defs>
+      <rect x="10" y="70" width="110" height="60" rx="12" fill="var(--brand)"/><text x="65" y="98" text-anchor="middle" font-weight="700" font-size="14" style="fill:var(--bg)">Your email</text><text x="65" y="116" text-anchor="middle" font-size="11" style="fill:var(--bg);opacity:.8">leaves the ESP</text>
+      <line x1="122" y1="100" x2="152" y2="100" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#ar)"/>
+      <rect x="155" y="62" width="150" height="76" rx="12" fill="var(--surface-2)" stroke="var(--line)"/><text x="230" y="88" text-anchor="middle" font-weight="700" font-size="14">1. Identity</text><text x="230" y="106" text-anchor="middle" font-size="11" style="fill:var(--ink-2)">SPF · DKIM · DMARC</text><text x="230" y="122" text-anchor="middle" font-size="11" style="fill:var(--ink-2)">"Is it really you?"</text>
+      <line x1="307" y1="100" x2="337" y2="100" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#ar)"/>
+      <rect x="340" y="62" width="150" height="76" rx="12" fill="var(--surface-2)" stroke="var(--line)"/><text x="415" y="88" text-anchor="middle" font-weight="700" font-size="14">2. Reputation</text><text x="415" y="106" text-anchor="middle" font-size="11" style="fill:var(--ink-2)">complaints · traps</text><text x="415" y="122" text-anchor="middle" font-size="11" style="fill:var(--ink-2)">engagement · bounces</text>
+      <line x1="492" y1="100" x2="522" y2="100" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#ar)"/>
+      <rect x="525" y="62" width="110" height="76" rx="12" fill="var(--surface-2)" stroke="var(--line)"/><text x="580" y="88" text-anchor="middle" font-weight="700" font-size="14">3. Content</text><text x="580" y="106" text-anchor="middle" font-size="11" style="fill:var(--ink-2)">caps · !!! · images</text><text x="580" y="122" text-anchor="middle" font-size="11" style="fill:var(--ink-2)">spammy words</text>
+      <line x1="637" y1="100" x2="662" y2="100" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#ar)"/>
+      <rect x="665" y="70" width="85" height="60" rx="12" fill="var(--good)"/><text x="707" y="105" text-anchor="middle" font-weight="700" font-size="14" style="fill:#fff">Inbox</text>
+      <line x1="230" y1="140" x2="230" y2="190" stroke="var(--bad)" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <line x1="415" y1="140" x2="415" y2="190" stroke="var(--bad)" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <line x1="580" y1="140" x2="580" y2="190" stroke="var(--bad)" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <line x1="200" y1="190" x2="610" y2="190" stroke="var(--bad)" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <line x1="405" y1="190" x2="405" y2="203" stroke="var(--bad)" stroke-width="1.5" marker-end="url(#ar)"/>
+      <rect x="325" y="206" width="160" height="36" rx="10" fill="var(--bad-soft)" stroke="var(--bad)"/><text x="405" y="229" text-anchor="middle" font-weight="700" font-size="13" style="fill:var(--bad)">Spam folder / blocked</text>
+      <text x="232" y="168" font-size="11" style="fill:var(--bad)"> fail</text><text x="417" y="168" font-size="11" style="fill:var(--bad)"> fail</text><text x="582" y="168" font-size="11" style="fill:var(--bad)"> fail</text>
+    </svg>
+  </div>
+
+  <div class="card" style="margin-top:20px">
+    <h3>Practice: subject-line checker</h3>
+    <p class="note" style="margin-bottom:12px">Type a subject line. The checker flags the content warning signs from this chapter. (Real filters weigh your reputation far more than wording, so treat this as a habit check.)</p>
+    <input class="subj-in" id="subj" value="FREE!!! Act NOW to claim your $$$ prize" aria-label="Subject line">
+    <div class="meter"><i id="subjBar"></i></div>
+    <div class="verdict" id="subjVerdict" style="margin-top:4px"></div>
+    <div id="subjFlags" style="margin-top:8px"></div>
+  </div>
   <div class="card" style="margin-top:20px">
     <h3>Practice: you're the spam filter</h3>
     <p class="note" style="margin-bottom:14px">Inbox or spam folder? Decide for each email.</p>
@@ -300,6 +372,12 @@ footer{padding:32px 0 48px;color:var(--muted);font-size:14px;border-top:1px soli
     <div class="check"><span>4</span><div><b>Double opt-in</b> (confirm by clicking a link) keeps the list cleaner than single opt-in and blocks typos and fake sign-ups.</div></div>
     <div class="check"><span>5</span><div><b>Unsubscribe link</b> in every marketing email. Honor it right away.</div></div>
   </div>
+  <div class="card" style="margin-top:20px">
+    <h3>Practice: clean this list</h3>
+    <p class="note" style="margin-bottom:12px">Keep or remove each subscriber, then check your answers.</p>
+    <div class="tbl"><table class="data clean" id="cleanTbl"><thead><tr><th>Subscriber</th><th>Recent history</th><th>Your call</th></tr></thead><tbody></tbody></table></div>
+    <div style="display:flex;gap:8px;margin-top:12px;align-items:center;flex-wrap:wrap"><button class="btn primary" id="cleanCheck">Check my list</button><button class="btn" id="cleanReset">Start over</button><span class="verdict" id="cleanScore" style="margin:0"></span></div>
+  </div>
   <div class="key">A smaller list of people who open beats a bigger list of people who don't. Non-openers drag down your reputation with every mailbox provider.</div>
 </div></section>
 
@@ -319,6 +397,13 @@ footer{padding:32px 0 48px;color:var(--muted);font-size:14px;border-top:1px soli
     <div class="check"><span>2</span><div>The subject line says what it is: "Your order has shipped."</div></div>
     <div class="check"><span>3</span><div>Transaction details go at the top.</div></div>
     <div class="check"><span>4</span><div>Any promotion comes after them and takes up <b>less than half</b> the email.</div></div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h3>Which retail emails do shoppers open?</h3>
+    <p class="note" style="margin-bottom:8px">Share of U.S. online shoppers most likely to open each type (2022). Transactional emails are highlighted.</p>
+    <div id="openChart"></div>
+    <div class="legend"><span><i style="background:var(--bar-b)"></i>Promotional</span><span><i style="background:var(--good)"></i>Transactional</span></div>
+    <div class="src">Source: Digital Commerce 360 / Bizrate Insights, May 2022, 1,015 respondents (via Statista).</div>
   </div>
   <div class="key">Transactional emails get opened more than almost anything else, so a little promotion inside them is valuable. Too much turns a receipt into spam.</div>
 </div></section>
@@ -359,6 +444,12 @@ footer{padding:32px 0 48px;color:var(--muted);font-size:14px;border-top:1px soli
       <div class="stat hi"><span class="lbl">Revenue per email</span><span class="val" id="rE"></span></div>
     </div>
   </div>
+  <div class="card" style="margin-top:20px">
+    <h3>What marketers measure now</h3>
+    <p class="note" style="margin-bottom:8px">After Apple's privacy change, marketers were asked which metrics they use to judge email success (2022). Open rate fell to the bottom half.</p>
+    <div id="mppChart"></div>
+    <div class="src">Source: Mailmodo, Oct–Nov 2022, 153 email professionals (via Statista). CTOR = click-to-open rate.</div>
+  </div>
   <div class="key">Revenue per email pulls every step into one number. If it's higher than what each email costs you, the program is making money. And churn is never zero; every email reminds a few people they don't want it. That's fine.</div>
 </div></section>
 
@@ -383,6 +474,18 @@ footer{padding:32px 0 48px;color:var(--muted);font-size:14px;border-top:1px soli
   </div>
   <div class="key">The subject line and preview text are your ad. The body is your landing page.</div>
 
+  <div class="card" style="margin-top:20px">
+    <h3>One offer or many?</h3>
+    <p class="note" style="margin-bottom:14px">A focused email sells one thing. A stacked email leads with one offer and adds more below. Which gets more clicks depends on how many readers care about the main offer.</p>
+    <div class="cmp">
+      <div class="mini-mail"><div class="hd">Focused</div><div class="bd"><div class="blk" style="min-height:120px">Men's sale<br><span style="font-weight:500;opacity:.9">Up to 40% off</span></div></div></div>
+      <div class="mini-mail"><div class="hd">Stacked</div><div class="bd"><div class="blk">Custom garage doors</div><div class="blk-row"><div class="blk sm">Fencing</div><div class="blk sm">Paint deals</div><div class="blk sm">Tool rental</div><div class="blk sm">Patio sets</div></div></div></div>
+    </div>
+    <div class="range-row"><label for="interest" style="font-weight:600">Readers who care about the main offer</label><input type="range" id="interest" min="2" max="80" value="40"><span class="range-val" id="interestVal">40%</span></div>
+    <div id="cmpChart"></div>
+    <div class="verdict" id="cmpVerdict"></div>
+    <div class="src">Illustrative model: interested readers click a focused email 10% of the time and a stacked one 7% (the extra offers distract a little). Uninterested readers click 0.5% of focused emails and 3% of stacked ones (they find something else).</div>
+  </div>
   <h3 style="margin-top:28px">Cases from the chapter</h3>
   <details><summary>One offer or a dozen? Two retailers compared</summary><div>A fashion retailer sent an email with one offer (a men's sale) and nothing else. A home-improvement retailer led with one offer (custom garage doors) and then stacked a dozen more below it. Which works better depends on how many readers care about the main offer. Lots of fashion shoppers might want a men's sale. Very few home-improvement shoppers are buying a garage door this week, so the extra offers ("Ooh, fence installation!") give everyone else something to click.</div></details>
   <details><summary>The plain-text B2B sales email</summary><div>No images at all, just text. It can still work: plain text looks like a note from a person, and business buyers are reading for information. It also asked readers to add the sender to their safe-sender list and had an unsubscribe link at the bottom.</div></details>
@@ -421,6 +524,32 @@ footer{padding:32px 0 48px;color:var(--muted);font-size:14px;border-top:1px soli
     </table>
   </div>
   <p style="margin:16px 0 0;color:var(--ink-2);max-width:720px">Timing matters: send the welcome right away, then space the rest out (for example 1, 2, 5 and 10 days later). Build in <b style="color:var(--ink)">dependencies</b>: someone who clicks everything gets a different path than someone who opens nothing, and nobody who just upgraded should get an exit survey.</p>
+  <div class="card" style="margin-top:16px">
+    <h3>A sample onboarding sequence with a branch</h3>
+    <svg viewBox="0 0 760 230" class="chart-wrap" role="img" aria-label="Timeline: Welcome on day 0, getting-started on day 1, then on day 3 people who acted get a next-step email and people who didn't get a re-engagement email, an offer on day 8 and an exit survey on day 18 only for those who never acted">
+      <line x1="40" y1="70" x2="730" y2="70" stroke="var(--line)" stroke-width="3"/>
+      <g font-size="12">
+        <circle cx="60" cy="70" r="9" fill="var(--accent)"/><text x="60" y="44" text-anchor="middle" font-weight="700">Day 0</text><text x="60" y="98" text-anchor="middle">Welcome</text>
+        <circle cx="190" cy="70" r="9" fill="var(--accent)"/><text x="190" y="44" text-anchor="middle" font-weight="700">Day 1</text><text x="190" y="98" text-anchor="middle">Getting started</text>
+        <circle cx="330" cy="70" r="9" fill="var(--accent)"/><text x="330" y="44" text-anchor="middle" font-weight="700">Day 3</text>
+        <circle cx="490" cy="70" r="9" fill="var(--accent)"/><text x="490" y="44" text-anchor="middle" font-weight="700">Day 8</text>
+        <circle cx="680" cy="70" r="9" fill="var(--accent)"/><text x="680" y="44" text-anchor="middle" font-weight="700">Day 18</text>
+      </g>
+      <path d="M330 79 C330 110, 300 120, 290 135" fill="none" stroke="var(--good)" stroke-width="1.5"/>
+      <path d="M330 79 C330 110, 360 170, 380 182" fill="none" stroke="var(--bad)" stroke-width="1.5"/>
+      <rect x="215" y="135" width="150" height="34" rx="8" fill="var(--good-soft)" stroke="var(--good)"/><text x="290" y="157" text-anchor="middle" font-size="12" style="fill:var(--good)" font-weight="700">Acted → next step</text>
+      <rect x="320" y="182" width="170" height="34" rx="8" fill="var(--bad-soft)" stroke="var(--bad)"/><text x="405" y="204" text-anchor="middle" font-size="12" style="fill:var(--bad)" font-weight="700">Didn't act → reminder</text>
+      <rect x="430" y="96" width="120" height="30" rx="8" fill="var(--surface-2)" stroke="var(--line)"/><text x="490" y="116" text-anchor="middle" font-size="12">Offer or upsell</text>
+      <rect x="610" y="96" width="140" height="44" rx="8" fill="var(--surface-2)" stroke="var(--line)"/><text x="680" y="114" text-anchor="middle" font-size="12">Exit survey</text><text x="680" y="130" text-anchor="middle" font-size="11" style="fill:var(--muted)">only if never acted</text>
+    </svg>
+    <p class="note">The gaps grow (1, 2, 5, 10 days) and the path splits on behavior. Many email platforms let marketers set this up as an automated "journey."</p>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h3>Tools marketers use to personalize</h3>
+    <p class="note" style="margin-bottom:8px">Share of U.S. marketers using each tool (2020). Triggered emails often need a dedicated tool, though most email platforms now include basic automation.</p>
+    <div id="persChart"></div>
+    <div class="src">Source: Evergage / Researchscape, Feb–Mar 2020, 187 respondents (via Statista).</div>
+  </div>
   <details><summary>Case: the file-storage app's one-line reminder</summary><div>Sent to people who signed up but never installed the app. It said why they were getting the email, gave two benefits and put the download button right there. One email, one action.</div></details>
   <details><summary>Case: the home-decor store's "We miss you"</summary><div>A 20%-off, limited-time offer in a friendly handwritten style, sent only to people who had ignored the earlier onboarding emails. The discount went only where a sale was unlikely anyway, instead of giving away margin to everyone.</div></details>
 
@@ -474,6 +603,12 @@ footer{padding:32px 0 48px;color:var(--muted);font-size:14px;border-top:1px soli
     </div>
     <div class="splitbar"><span id="barA" style="background:#d24b3e"></span><span id="barB" style="background:var(--bar-b)"></span><span id="barR"></span></div>
     <div class="legend"><span><i style="background:#d24b3e"></i>Gets A</span><span><i style="background:var(--bar-b)"></i>Gets B</span><span><i style="background:var(--bar-a)"></i>Gets the winner</span></div>
+  </div>
+  <div class="card" style="margin-top:20px">
+    <h3>How test size grows with list size</h3>
+    <p class="note" style="margin-bottom:8px">Recommended people per version, using the rate and difference you entered above. The traditional answer never changes. The profit-maximizing answer grows with your list, but much more slowly. Where the dashed line is below the gray one, your list is too small for the traditional method.</p>
+    <div id="sizeChart"></div>
+    <div class="legend"><span><i style="background:var(--bar-a)"></i>Traditional (80% power)</span><span><i style="background:var(--accent)"></i>Profit-maximizing</span><span><i style="background:var(--warn)"></i>Half your list (the most you could test)</span></div>
   </div>
   <div class="update"><b>Pick winners by clicks:</b> because open rates are inflated by Apple's privacy feature, choose your A/B winner by clicks when you can. The math works the same way.</div>
   <div class="key">Small lists should test small and act on the result.</div>
@@ -658,6 +793,119 @@ footer{padding:32px 0 48px;color:var(--muted);font-size:14px;border-top:1px soli
         C=["Women's athletic shoes","Women's dress flats","Women's high heels","Women's sandals","Women's slippers","Women's boots","Men's athletic shoes","Men's sandals","Men's dress shoes","Men's boots"];
   function decode(){const t=+$('#dT').value,o=+$('#dO').value,c=+$('#dC').value;$('#dOut').textContent=t+', '+o+', '+c+' = '+T[t-1]+', '+O[o-1]+', '+C[c-1]+'.';}
   ['#dT','#dO','#dC'].forEach(s=>$(s).addEventListener('change',decode)); decode();
+
+
+  // ===== Charts =====
+  const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+  function hbar(el,rows,opt){
+    opt=opt||{}; const W=760,L=opt.labelW||230,R=60,bh=opt.bh||22,gap=opt.gap||12,series=opt.series||[{k:'v',c:'var(--bar-b)'}];
+    const grp=series.length*bh+(series.length-1)*3, H=rows.length*(grp+gap)+10, max=opt.max||Math.max(...rows.flatMap(r=>series.map(s=>r[s.k])));
+    let s='<svg viewBox="0 0 '+W+' '+H+'" class="chart-wrap" role="img" aria-label="'+(opt.aria||'Bar chart')+'">';
+    rows.forEach((r,i)=>{const y=5+i*(grp+gap);
+      s+='<text x="'+(L-10)+'" y="'+(y+grp/2+4)+'" text-anchor="end" font-size="13">'+r.l+'</text>';
+      series.forEach((se,j)=>{const v=r[se.k],w=(W-L-R)*v/max,yy=y+j*(bh+3),col=r.c||se.c;
+        s+='<rect x="'+L+'" y="'+yy+'" width="'+Math.max(2,w)+'" height="'+bh+'" rx="4" fill="'+col+'"></rect><text x="'+(L+w+6)+'" y="'+(yy+bh/2+4)+'" font-size="12" style="fill:var(--ink-2)">'+(opt.fmt?opt.fmt(v):v)+'</text>';});
+    });
+    el.innerHTML=s+'</svg>';
+  }
+  function vbar(el,rows,opt){
+    const W=760,H=260,B=30,T=20,n=rows.length,bw=(W-40)/n*0.66,max=opt.max;
+    let s='<svg viewBox="0 0 '+W+' '+H+'" class="chart-wrap" role="img" aria-label="'+opt.aria+'">';
+    [0,100,200,300,400].forEach(g=>{const y=H-B-(H-B-T)*g/max;s+='<line x1="30" x2="'+W+'" y1="'+y+'" y2="'+y+'" stroke="var(--line)"></line><text x="24" y="'+(y+4)+'" font-size="11" text-anchor="end" style="fill:var(--muted)">'+g+'</text>';});
+    rows.forEach((r,i)=>{const cx=40+(i+0.5)*(W-40)/n,h=(H-B-T)*r.v/max,y=H-B-h;
+      s+='<rect x="'+(cx-bw/2)+'" y="'+y+'" width="'+bw+'" height="'+h+'" rx="4" fill="'+(r.f?'var(--accent-soft)':'var(--bar-b)')+'" stroke="'+(r.f?'var(--bar-b)':'none')+'" stroke-dasharray="'+(r.f?'4 3':'')+'"></rect><text x="'+cx+'" y="'+(y-6)+'" text-anchor="middle" font-size="12" font-weight="600">'+r.v+'</text><text x="'+cx+'" y="'+(H-10)+'" text-anchor="middle" font-size="12" style="fill:var(--ink-2)">'+r.l+'</text>';});
+    el.innerHTML=s+'</svg>';
+  }
+  const pctf=v=>v+'%';
+  const WHY={
+    vol:{draw:el=>vbar(el,[{l:'2017',v:269},{l:'2018',v:281.1},{l:'2019',v:293.6},{l:'2020',v:306.4},{l:'2021',v:319.6},{l:'2022',v:333.2},{l:'2023',v:347.3,f:1},{l:'2024',v:361.6,f:1},{l:'2025',v:376.4,f:1},{l:'2026',v:392.5,f:1}],{max:420,aria:'Daily emails worldwide grew from 269 billion in 2017 to a projected 392.5 billion in 2026'}),
+      legend:'<span><i style="background:var(--bar-b)"></i>Actual</span><span><i style="background:var(--accent-soft);border:1px dashed var(--bar-b)"></i>Forecast</span>',
+      note:'Billions of emails sent and received per day worldwide. Up about 46% in under a decade, with no sign of slowing.',src:'Source: The Radicati Group (via Statista, 2024). 2023 onward are forecasts.'},
+    pref:{draw:el=>hbar(el,[{l:'Email',v:79},{l:'Text message',v:47},{l:'Social media',v:39},{l:'Phone call',v:17},{l:'None of the above',v:7}],{max:100,fmt:pctf,aria:'Email preferred by 79% of U.S. millennials'}),
+      legend:'',note:'Share of U.S. millennials who prefer each way of being contacted by brands. Email leads text by 32 points.',src:'Source: Latana, June 2022 (via Statista).'},
+    roi:{draw:el=>hbar(el,[{l:'Email marketing',a:73,b:75},{l:'SEO (organic search)',a:72,b:74},{l:'Content marketing',a:54,b:73},{l:'Paid search (PPC)',a:67,b:61},{l:'Mobile marketing',a:50,b:57},{l:'Social media',a:38,b:56},{l:'Online display',a:41,b:41},{l:'Affiliate marketing',a:44,b:34}],{max:100,fmt:pctf,bh:14,series:[{k:'a',c:'var(--brand)'},{k:'b',c:'var(--bar-b)'}],aria:'Email rated top for ROI by companies (73%) and agencies (75%)'}),
+      legend:'<span><i style="background:var(--brand)"></i>Company marketers</span><span><i style="background:var(--bar-b)"></i>Agency marketers</span>',
+      note:'Share rating each channel "excellent" or "good" for return on investment. Email tops both lists. Display advertising (Chapter 7) sits near the bottom.',src:'Source: Econsultancy / Adestra, 2019, 435 marketers (via Statista).'}
+  };
+  function showWhy(k){const d=WHY[k];d.draw($('#whyChart'));$('#whyLegend').innerHTML=d.legend;$('#whyNote').textContent=d.note;$('#whySrc').textContent=d.src;$$('#whyTabs button').forEach(b=>b.classList.toggle('on',b.dataset.c===k));}
+  $('#whyTabs').addEventListener('click',e=>{const b=e.target.closest('button');if(b)showWhy(b.dataset.c);});
+  showWhy('vol');
+
+  hbar($('#openChart'),[{l:'Current promotions',v:62},{l:'Shipping confirmations',v:52,c:'var(--good)'},{l:'Order confirmations',v:52,c:'var(--good)'},{l:'Delivery confirmations',v:43,c:'var(--good)'},{l:'Loyalty program offers',v:40},{l:'Free shipping',v:37},{l:'New products',v:26},{l:'Review requests',v:20},{l:'Back in stock',v:19},{l:'Seasonal activities',v:13}],{max:70,fmt:pctf,bh:18,gap:8,aria:'Promotions 62%, shipping and order confirmations 52% each'});
+  hbar($('#mppChart'),[{l:'Click-through rate',v:64.8},{l:'Email ROI',v:64.8},{l:'Conversion rate',v:56.3},{l:'Still measuring open rates',v:26.8,c:'var(--bar-a)'},{l:'Reply / submission rate',v:26.8},{l:'Click-to-open rate',v:18.3}],{max:80,fmt:v=>v.toFixed(1)+'%',bh:20,gap:10,aria:'CTR and ROI used by 65% of marketers; open rate by 27%'});
+  hbar($('#persChart'),[{l:'Email marketing platform',v:67},{l:'A/B testing',v:67},{l:'Web analytics',v:41},{l:'Triggered-email tool',v:38,c:'var(--accent)'},{l:'Personalization platform',v:30},{l:'Customer data platform',v:30},{l:'Recommendation engine',v:28},{l:'Push notifications',v:21}],{max:80,fmt:pctf,bh:18,gap:8,aria:'Email platforms and A/B testing 67%, triggered-email tools 38%'});
+
+  // ===== Subject-line checker =====
+  const SPAMMY=['free','winner','win','prize','cash','$$$','act now','urgent','guarantee','guaranteed','risk-free','no cost','click here','limited time only','100%','miracle','congratulations','buy now','cheap','earn money','double your','no obligation'];
+  function checkSubj(){
+    const s=$('#subj').value, f=[]; let pts=0;
+    const letters=s.replace(/[^A-Za-z]/g,''), caps=letters.replace(/[^A-Z]/g,'').length, capRatio=letters.length?caps/letters.length:0;
+    const capsWords=(s.match(/\b[A-Z]{3,}\b/g)||[]).length;
+    if(capRatio>0.5&&letters.length>6){f.push(['no','Mostly capital letters. Reads as shouting.']);pts+=3}else if(capsWords){f.push(['mid',capsWords+' all-caps word'+(capsWords>1?'s':'')+'. Use sparingly.']);pts+=1}else f.push(['ok','Normal capitalization.']);
+    const ex=(s.match(/!/g)||[]).length; if(ex>=2){f.push(['no',ex+' exclamation marks. One at most.']);pts+=2}else if(ex===1){f.push(['mid','One exclamation mark. Fine, but optional.'])}else f.push(['ok','No exclamation marks.']);
+    const low=s.toLowerCase(), hits=SPAMMY.filter(w=>new RegExp('(^|[^a-z])'+w.replace(/[$]/g,'\\$')+'([^a-z]|$)').test(low));
+    if(hits.length){f.push(['no','Spam-trigger words: '+hits.map(w=>'"'+w+'"').join(', ')+'.']);pts+=Math.min(3,hits.length)}else f.push(['ok','No common spam-trigger words.']);
+    if(/[$€£]{2,}|%{2,}|\?{2,}/.test(s)){f.push(['no','Repeated symbols ($$, ??, %%).']);pts+=1}
+    const len=s.trim().length; if(len===0){f.push(['no','Empty subject line.']);pts+=3}else if(len>60){f.push(['mid',len+' characters. Phones cut off around 40–50; put the key words first.']);pts+=1}else if(len<10){f.push(['mid','Very short. Be descriptive: say what’s inside.'])}else f.push(['ok',len+' characters. A good length.']);
+    const score=Math.min(10,pts), col=score>=5?'var(--bad)':score>=2?'var(--warn)':'var(--good)';
+    $('#subjBar').style.width=(10+score*9)+'%'; $('#subjBar').style.background=col;
+    $('#subjVerdict').textContent=score>=5?'Looks like spam. Rewrite it.':score>=2?'A few warning signs. Tidy it up.':'Clean. Now make sure it says what’s inside.';
+    $('#subjFlags').innerHTML=f.map(([c,t])=>'<div class="flag '+c+'"><span class="ic">'+(c==='ok'?'✓':c==='no'?'!':'~')+'</span><span>'+t+'</span></div>').join('');
+  }
+  $('#subj').addEventListener('input',checkSubj); checkSubj();
+
+  // ===== Clean this list =====
+  const SUBS=[
+    {n:'ana.r@…',h:'Opened 3 of the last 5 emails',a:'k',w:'Engaged. Exactly who you want.'},
+    {n:'j.smith@…',h:'Hard bounce: "address does not exist"',a:'r',w:'Hard bounces come off immediately.'},
+    {n:'mike77@…',h:'One soft bounce last week (mailbox full)',a:'k',w:'One soft bounce is temporary. Remove only after about five in a row.'},
+    {n:'lee.k@…',h:'Six soft bounces in a row',a:'r',w:'Past the five-in-a-row line. The address is effectively dead.'},
+    {n:'pat.o@…',h:'No opens or clicks in 14 months',a:'r',w:'Inactive for more than a year. Send one "still want these?" email, then remove.'},
+    {n:'sam.t@…',h:'Clicked unsubscribe yesterday',a:'r',w:'Honor it right away. It’s also the law.'},
+    {n:'dee.w@…',h:'Joined 2 days ago, hasn’t opened yet',a:'k',w:'Brand new. Give the onboarding series a chance.'},
+    {n:'info@bought-list…',h:'Came from a purchased list',a:'r',w:'Never permission-based. Likely full of spam traps.'}
+  ];
+  let picks={};
+  function renderClean(){
+    $('#cleanTbl tbody').innerHTML=SUBS.map((s,i)=>'<tr id="cl'+i+'"><td><b>'+s.n+'</b></td><td>'+s.h+'<span class="res-why" style="display:none"></span></td><td><div class="kr"><button class="k'+(picks[i]==='k'?' on':'')+'" data-i="'+i+'" data-v="k">Keep</button><button class="r'+(picks[i]==='r'?' on':'')+'" data-i="'+i+'" data-v="r">Remove</button></div></td></tr>').join('');
+    $('#cleanScore').textContent='';
+  }
+  $('#cleanTbl').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;picks[b.dataset.i]=b.dataset.v;const row=b.closest('tr');row.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));row.className='';row.querySelector('.res-why').style.display='none';});
+  $('#cleanCheck').addEventListener('click',()=>{let r=0;SUBS.forEach((s,i)=>{const row=$('#cl'+i),ok=picks[i]===s.a;row.className=picks[i]?(ok?'res-ok':'res-no'):'';const w=row.querySelector('.res-why');w.style.display='block';w.textContent=(s.a==='k'?'Keep. ':'Remove. ')+s.w;if(ok)r++;});$('#cleanScore').textContent=r+' of '+SUBS.length+' correct';});
+  $('#cleanReset').addEventListener('click',()=>{picks={};renderClean();});
+  renderClean();
+
+  // ===== Focused vs stacked =====
+  function cmp(){
+    const p=+$('#interest').value/100, N=10000; $('#interestVal').textContent=Math.round(p*100)+'%';
+    const f=N*(p*0.10+(1-p)*0.005), s=N*(p*0.07+(1-p)*0.03);
+    hbar($('#cmpChart'),[{l:'Focused email',v:Math.round(f)},{l:'Stacked email',v:Math.round(s)}],{max:Math.max(f,s,400)*1.1,labelW:140,fmt:v=>v.toLocaleString('en-US')+' clicks',bh:26,aria:'Clicks per 10,000 emails'});
+    $('#cmpVerdict').textContent=f>=s?'Focused wins: enough readers want the main offer that extra offers only distract.':'Stacked wins: most readers don’t want the main offer, so the extras give them something to click.';
+  }
+  $('#interest').addEventListener('input',cmp); cmp();
+
+  // ===== Size curve =====
+  function sizeCurve(){
+    const p=(+$('#cP').value||15)/100, d=(+$('#cD').value||1)/100; if(p<=0||p>=1||d<=0)return;
+    const v=p*(1-p), r=v/(d*d), trad=2*Math.pow(1.96+0.8416,2)*v/(d*d);
+    const W=760,H=280,L=60,B=40,T=16,R=20, xs=[1000,2000,5000,10000,20000,50000,100000,200000,500000];
+    const lx=x=>L+(W-L-R)*(Math.log10(x)-3)/(Math.log10(500000)-3);
+    const ymax=Math.max(trad*1.15,Math.sqrt(500000/4*r+Math.pow(.75*r,2))-.75*r);
+    const ly=y=>H-B-(H-B-T)*Math.min(y,ymax)/ymax;
+    const pm=x=>Math.min(Math.sqrt(x/4*r+Math.pow(.75*r,2))-.75*r,x/2);
+    let s='<svg viewBox="0 0 '+W+' '+H+'" class="chart-wrap" role="img" aria-label="Recommended test size per version by list size">';
+    const step=Math.pow(10,Math.floor(Math.log10(ymax)))/ (ymax/Math.pow(10,Math.floor(Math.log10(ymax)))<3?2:1);
+    for(let g=0;g<=ymax;g+=step){s+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+ly(g)+'" y2="'+ly(g)+'" stroke="var(--line)"></line><text x="'+(L-6)+'" y="'+(ly(g)+4)+'" text-anchor="end" font-size="11" style="fill:var(--muted)">'+Math.round(g).toLocaleString('en-US')+'</text>';}
+    xs.forEach(x=>{s+='<text x="'+lx(x)+'" y="'+(H-B+18)+'" text-anchor="middle" font-size="11" style="fill:var(--muted)">'+(x>=1000?(x/1000)+'k':x)+'</text>';});
+    s+='<text x="'+((W+L)/2)+'" y="'+(H-4)+'" text-anchor="middle" font-size="12" style="fill:var(--ink-2)">Email list size</text>';
+    let half='',pmp='';for(let i=0;i<=80;i++){const x=Math.pow(10,3+i/80*(Math.log10(500000)-3));if(x/2<=ymax)half+=(half?'L':'M')+lx(x)+' '+ly(x/2);pmp+=(i?'L':'M')+lx(x)+' '+ly(pm(x));}
+    s+='<path d="'+half+'" fill="none" stroke="var(--warn)" stroke-width="1.5" stroke-dasharray="5 4"></path>';
+    s+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+ly(trad)+'" y2="'+ly(trad)+'" stroke="var(--bar-a)" stroke-width="3"></line>';
+    s+='<path d="'+pmp+'" fill="none" stroke="var(--accent)" stroke-width="3"></path>';
+    const N=+$('#cN').value||10000; if(N>=1000&&N<=500000){s+='<circle cx="'+lx(N)+'" cy="'+ly(pm(N))+'" r="6" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"></circle><text x="'+lx(N)+'" y="'+(ly(pm(N))-12)+'" text-anchor="middle" font-size="12" font-weight="700">Your list: '+Math.round(pm(N)).toLocaleString('en-US')+'</text>';}
+    $('#sizeChart').innerHTML=s+'</svg>';
+  }
+  ['#cN','#cP','#cD'].forEach(x=>$(x).addEventListener('input',sizeCurve)); sizeCurve();
 
   // Quiz
   const Q=[
