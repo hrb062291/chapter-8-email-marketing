@@ -707,7 +707,7 @@ input[type=range]{accent-color:var(--accent)}
 
   // Nav highlight
   const links=$$('#toc a');
-  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>{const on=a.getAttribute('href')==='#'+e.target.id;a.classList.toggle('on',on);if(on)a.scrollIntoView({block:'nearest',inline:'nearest'})})}),{rootMargin:'-80px 0px -70% 0px'});
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>{const on=a.getAttribute('href')==='#'+e.target.id;a.classList.toggle('on',on);if(on){const t=a.parentElement;if(a.offsetLeft<t.scrollLeft||a.offsetLeft+a.offsetWidth>t.scrollLeft+t.clientWidth)t.scrollLeft=a.offsetLeft-16;}})}),{rootMargin:'-80px 0px -70% 0px'});
   $$('section[id]').forEach(s=>io.observe(s));
 
   // Spam game
